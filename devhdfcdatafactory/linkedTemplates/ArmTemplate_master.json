@@ -15,13 +15,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'az_synp_sqlls'"
 		},
-		"oncsvfileuploaded_properties_ingestdata-pipe_parameters_pipelinefilename": {
+		"csv-submissions_properties_typeProperties_scope": {
 			"type": "string",
-			"defaultValue": "airline.csv"
-		},
-		"oncsvfileuploaded_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/2a3390b4-6a54-48b5-812a-35320c2fab9c/resourceGroups/sbt-dlaas-rg/providers/Microsoft.Storage/storageAccounts/sbtdlaasstorage"
+			"defaultValue": "/subscriptions/da0b991a-b21f-4a58-9d8e-f875a994468c/resourceGroups/dev-hdfc-rg/providers/Microsoft.Storage/storageAccounts/devhdfcstorage"
 		},
 		"containerUri": {
 			"type": "string",
@@ -56,11 +52,8 @@
 					"az_synp_sqlls_connectionString": {
 						"value": "[parameters('az_synp_sqlls_connectionString')]"
 					},
-					"oncsvfileuploaded_properties_ingestdata-pipe_parameters_pipelinefilename": {
-						"value": "[parameters('oncsvfileuploaded_properties_ingestdata-pipe_parameters_pipelinefilename')]"
-					},
-					"oncsvfileuploaded_properties_typeProperties_scope": {
-						"value": "[parameters('oncsvfileuploaded_properties_typeProperties_scope')]"
+					"csv-submissions_properties_typeProperties_scope": {
+						"value": "[parameters('csv-submissions_properties_typeProperties_scope')]"
 					}
 				}
 			},

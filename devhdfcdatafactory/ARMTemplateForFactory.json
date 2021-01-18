@@ -15,13 +15,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'az_synp_sqlls'"
 		},
-		"oncsvfileuploaded_properties_ingestdata-pipe_parameters_pipelinefilename": {
+		"csv-submissions_properties_typeProperties_scope": {
 			"type": "string",
-			"defaultValue": "airline.csv"
-		},
-		"oncsvfileuploaded_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/2a3390b4-6a54-48b5-812a-35320c2fab9c/resourceGroups/sbt-dlaas-rg/providers/Microsoft.Storage/storageAccounts/sbtdlaasstorage"
+			"defaultValue": "/subscriptions/da0b991a-b21f-4a58-9d8e-f875a994468c/resourceGroups/dev-hdfc-rg/providers/Microsoft.Storage/storageAccounts/devhdfcstorage"
 		}
 	},
 	"variables": {
@@ -272,39 +268,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/oncsvfileuploaded')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "ingestdata-pipe",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"pipelinefilename": "[parameters('oncsvfileuploaded_properties_ingestdata-pipe_parameters_pipelinefilename')]"
-						}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/submissions/blobs/airline",
-					"blobPathEndsWith": ".csv",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('oncsvfileuploaded_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/ingestdata-pipe')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/azure-ir')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -360,6 +323,26 @@
 				"[concat(variables('factoryId'), '/datasets/csvdelimit')]",
 				"[concat(variables('factoryId'), '/datasets/az_syna_sql_ds')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csv-submissions')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/submissions/blobs/airline",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('csv-submissions_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
 		}
 	]
 }

@@ -1,0 +1,187 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "devhdfcdatafactory"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/az_syna_sql_ds')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "az_synp_sqlls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "year",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "month",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "carrier",
+						"type": "nvarchar"
+					},
+					{
+						"name": "carrier_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "airport",
+						"type": "nvarchar"
+					},
+					{
+						"name": "airport_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "arr_flights",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "arr_del15",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "carrier_ct",
+						"type": "decimal",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "weather_ct",
+						"type": "decimal",
+						"precision": 3,
+						"scale": 2
+					},
+					{
+						"name": "nas_ct",
+						"type": "decimal",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "security_ct",
+						"type": "decimal",
+						"precision": 3,
+						"scale": 2
+					},
+					{
+						"name": "late_aircraft_ct",
+						"type": "decimal",
+						"precision": 4,
+						"scale": 2
+					},
+					{
+						"name": "arr_cancelled",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "arr_diverted",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "arr_delay",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "carrier_delay",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "weather_delay",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "nas_delay",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "security_delay",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "late_aircraft_delay",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "airlinedata"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csvdelimit')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "az_blob_strg",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "submissions"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csv-submissions')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/submissions/blobs/airline",
+					"ignoreEmptyBlobs": true,
+					"scope": "/subscriptions/da0b991a-b21f-4a58-9d8e-f875a994468c/resourceGroups/dev-hdfc-rg/providers/Microsoft.Storage/storageAccounts/devhdfcstorage",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
