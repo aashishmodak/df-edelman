@@ -17,9 +17,8 @@
 		"type": "BlobEventsTrigger",
 		"typeProperties": {
 			"blobPathBeginsWith": "/submissions/blobs/airline",
-			"blobPathEndsWith": ".csv",
 			"ignoreEmptyBlobs": true,
-			"scope": "/subscriptions/2a3390b4-6a54-48b5-812a-35320c2fab9c/resourceGroups/sbt-dlaas-rg/providers/Microsoft.Storage/storageAccounts/sbtdlaasstorage",
+			"scope": "/subscriptions/da0b991a-b21f-4a58-9d8e-f875a994468c/resourceGroups/dev-hdfc-rg/providers/microsoft.storage/storageAccounts/devhdfcstorage",
 			"events": [
 				"Microsoft.Storage.BlobCreated"
 			]
