@@ -1,0 +1,17 @@
+{
+	"name": "csv-submissions",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/submissions/blobs/airline",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/da0b991a-b21f-4a58-9d8e-f875a994468c/resourceGroups/dev-hdfc-rg/providers/microsoft.storage/storageAccounts/devhdfcstorage",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
