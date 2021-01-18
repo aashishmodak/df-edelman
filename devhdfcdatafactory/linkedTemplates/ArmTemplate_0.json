@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'az_synp_sqlls'"
 		},
+		"csv-submissions_properties_ingestdata-pipe_parameters_pipelinefilename": {
+			"type": "string",
+			"defaultValue": "airline.csv"
+		},
 		"csv-submissions_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/da0b991a-b21f-4a58-9d8e-f875a994468c/resourceGroups/dev-hdfc-rg/providers/Microsoft.Storage/storageAccounts/devhdfcstorage"
@@ -55,37 +59,8 @@
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"type": "Managed",
-				"typeProperties": {
-					"computeProperties": {
-						"location": "AutoResolve",
-						"dataFlowProperties": {
-							"computeType": "General",
-							"coreCount": 8,
-							"timeToLive": 15
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/csv-submissions')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/submissions/blobs/airline",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('csv-submissions_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
+				"type": "SelfHosted",
+				"typeProperties": {}
 			},
 			"dependsOn": []
 		},
@@ -322,9 +297,9 @@
 								},
 								"folderPath": "publisheddata"
 							},
-							"integrationRuntime": {
-								"referenceName": "azure-ir",
-								"type": "IntegrationRuntimeReference"
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
 							},
 							"traceLevel": "Fine"
 						}
@@ -339,9 +314,40 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/movecsvtosqldwh')]",
 				"[concat(variables('factoryId'), '/linkedServices/az_blob_strg')]",
-				"[concat(variables('factoryId'), '/integrationRuntimes/azure-ir')]"
+				"[concat(variables('factoryId'), '/dataflows/movecsvtosqldwh')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csv-submissions')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "ingestdata-pipe",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"pipelinefilename": "[parameters('csv-submissions_properties_ingestdata-pipe_parameters_pipelinefilename')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/submissions/blobs/airline",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('csv-submissions_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/ingestdata-pipe')]"
 			]
 		}
 	]

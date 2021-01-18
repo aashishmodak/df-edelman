@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'az_synp_sqlls'"
 		},
+		"csv-submissions_properties_ingestdata-pipe_parameters_pipelinefilename": {
+			"type": "string",
+			"defaultValue": "airline.csv"
+		},
 		"csv-submissions_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/da0b991a-b21f-4a58-9d8e-f875a994468c/resourceGroups/dev-hdfc-rg/providers/Microsoft.Storage/storageAccounts/devhdfcstorage"
@@ -51,6 +55,9 @@
 					},
 					"az_synp_sqlls_connectionString": {
 						"value": "[parameters('az_synp_sqlls_connectionString')]"
+					},
+					"csv-submissions_properties_ingestdata-pipe_parameters_pipelinefilename": {
+						"value": "[parameters('csv-submissions_properties_ingestdata-pipe_parameters_pipelinefilename')]"
 					},
 					"csv-submissions_properties_typeProperties_scope": {
 						"value": "[parameters('csv-submissions_properties_typeProperties_scope')]"
